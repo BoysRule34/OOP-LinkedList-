@@ -1,10 +1,8 @@
 #include <iostream> 
+#include "LinkedList.hpp"
 
 template<typename Type>
-LinkedList<Type>::LinkedList() : head(NULL) {};
-
-template<typename Type>
-LinkedList<Type>::~LinkedList() {
+void LinkedList<Type>::clear() {
     Node<Type>* cur;
     while (head != NULL) {
         cur = head->next;
@@ -15,8 +13,55 @@ LinkedList<Type>::~LinkedList() {
 }
 
 template<typename Type>
-void LinkedList<Type>::deleteNode(int nodeOffset)
-{
+void LinkedList<Type>::setHead(Node<Type>*& otherHead) {
+    clear();
+    head = otherHead;
+}
+
+template<typename Type>
+Node<Type>* LinkedList<Type>::getHead() {
+    return head;
+}
+
+template<typename Type>
+Node<Type>* LinkedList<Type>::cloneHead(Node<Type>& cur) {
+    if (cur == NULL) {
+        return NULL;
+    }
+    Node<Type>* newNode = new Node<Type>(cur->data);
+    newNode->next = cloneHead(cur->next);
+    return newNode;
+}
+
+template<typename Type>
+LinkedList<Type>::LinkedList() : head(NULL) {}
+
+template<typename Type>
+LinkedList<Type>::LinkedList(const LinkedList<Type>& list) {
+    head = NULL;
+    Node<Type>* cur = NULL;
+    Node<Type>* other = list.head;
+    while (other != NULL) {
+        Node<Type>* newNode = new Node<Type>();
+        newNode->next = NULL;
+        newNode->data = other->data;
+        if (cur != NULL)
+            cur->next = newNode;
+        if (head == NULL)
+            head = newNode;
+        cur = newNode;
+        other = other->next;
+    }
+}
+
+
+template<typename Type>
+LinkedList<Type>::~LinkedList() {
+    clear();
+}
+
+template<typename Type>
+void LinkedList<Type>::deleteNode(int nodeOffset) {
     Node<Type>* temp1 = head, * temp2 = NULL;
     int ListLen = 0;
 
@@ -86,4 +131,25 @@ void LinkedList<Type>::printList() {
         cout << temp->data << " ";
         temp = temp->next;
     }
+    cout << "\n";
+}
+
+template<typename Type>
+const LinkedList<Type>& LinkedList<Type>::operator=(const LinkedList<Type>& list) {
+    head = NULL;
+    Node<Type>* cur = NULL;
+    Node<Type>* other = list.head;
+    while (other != NULL) {
+        Node<Type>* newNode = new Node<Type>();
+        newNode->next = NULL;
+        newNode->data = other->data;
+        if (cur != NULL)
+            cur->next = newNode;
+        if (head == NULL)
+            head = newNode;
+        cur = newNode;
+        other = other->next;
+    }
+    
+    return *this;
 }

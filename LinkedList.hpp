@@ -10,14 +10,23 @@ using namespace std;
 template<typename Type>
 class LinkedList {
 public:
-    Node<Type>* head;
-
     LinkedList();
+    LinkedList(const LinkedList<Type>&);
     ~LinkedList();
 
     void insertNode(Type);
     void printList();
     void deleteNode(int);
+    Node<Type>* cloneHead(Node<Type>&);
+    void clear();
+
+
+    void setHead(Node<Type>*& otherHead);
+    Node<Type>* getHead();
+
+    const LinkedList<Type>& operator=(const LinkedList<Type>&);
+private:
+    Node<Type>* head;
 };
 
 #include "LinkedList.cpp"
