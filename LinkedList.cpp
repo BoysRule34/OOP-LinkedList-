@@ -13,8 +13,27 @@ void LinkedList<Type>::clear() {
 }
 
 template<typename Type>
+int LinkedList<Type>::size()
+{
+    return listSize;
+}
+
+template<typename Type>
+const int LinkedList<Type>::max_size()
+{
+    return 999;
+}
+
+template<typename Type>
+bool LinkedList<Type>::empty()
+{
+    return head == NULL;
+}
+
+template<typename Type>
 void LinkedList<Type>::setHead(Node<Type>*& otherHead) {
     clear();
+
     head = otherHead;
 }
 
@@ -34,10 +53,11 @@ Node<Type>* LinkedList<Type>::cloneHead(Node<Type>& cur) {
 }
 
 template<typename Type>
-LinkedList<Type>::LinkedList() : head(NULL) {}
+LinkedList<Type>::LinkedList() : head(NULL) , listSize(0) {}
 
 template<typename Type>
 LinkedList<Type>::LinkedList(const LinkedList<Type>& list) {
+    listSize = list.listSize;
     head = NULL;
     Node<Type>* cur = NULL;
     Node<Type>* other = list.head;
@@ -61,47 +81,51 @@ LinkedList<Type>::~LinkedList() {
 }
 
 template<typename Type>
-void LinkedList<Type>::deleteNode(int nodeOffset) {
-    Node<Type>* temp1 = head, * temp2 = NULL;
-    int ListLen = 0;
+void LinkedList<Type>::deleteNode(int id) {
+    Node<Type>* cur1 = head, *cur2 = NULL;
+    int count = 0;
 
     if (head == NULL) {
         cout << "List empty." << endl;
-        return;
     }
+    else {
 
-    while (temp1 != NULL) {
-        temp1 = temp1->next;
-        ListLen++;
+        while (cur1 != NULL) {
+            cur1 = cur1->next;
+            count++;
+        }
+
+        if (count < id) {
+            cout << "Index out of range"
+                << endl;
+
+        }
+        else {
+            cur1 = head;
+
+            if (id == 1) {
+                head = head->next;
+                delete cur1;
+            }
+            else {
+
+                while (id-- > 1) {
+                    cur2 = cur1;
+                    cur1 = cur1->next;
+                }
+
+                cur2->next = cur1->next;
+
+                delete cur1;
+            }
+            listSize--;
+        }
     }
-
-    if (ListLen < nodeOffset) {
-        cout << "Index out of range"
-            << endl;
-        return;
-    }
-
-    temp1 = head;
-
-    if (nodeOffset == 1) {
-        head = head->next;
-        delete temp1;
-        return;
-    }
-
-    while (nodeOffset-- > 1) {
-        temp2 = temp1;
-        temp1 = temp1->next;
-    }
-
-    temp2->next = temp1->next;
-
-    delete temp1;
 }
 
 template<typename Type>
 void LinkedList<Type>::insertNode(Type data) {
-
+    listSize++;
     Node<Type>* newNode = new Node<Type>(data);
 
     if (head == NULL) {
@@ -136,6 +160,7 @@ void LinkedList<Type>::printList() {
 
 template<typename Type>
 const LinkedList<Type>& LinkedList<Type>::operator=(const LinkedList<Type>& list) {
+    listSize = list.listSize;
     head = NULL;
     Node<Type>* cur = NULL;
     Node<Type>* other = list.head;
@@ -153,3 +178,49 @@ const LinkedList<Type>& LinkedList<Type>::operator=(const LinkedList<Type>& list
     
     return *this;
 }
+
+template<typename Type>
+bool LinkedList<Type>::operator==(const LinkedList<Type>& list) {
+    if (list.listSize != listSize)
+        return false;
+    Node<Type>* cur = list.head;
+    Node<Type>* curHead = head;
+    while (cur != NULL && cur->data == curHead->data) {
+        cur = cur->next;
+        curHead = curHead->next;
+    }
+
+    return cur == NULL;
+
+}
+
+template<typename Type>
+bool LinkedList<Type>::operator!=(const LinkedList<Type>& list) {
+    if (list.listSize != listSize)
+        return true;
+    Node<Type>* cur = list.head;
+    Node<Type>* curHead = head;
+    while (cur != NULL && cur->data == curHead->data) {
+        cur = cur->next;
+        curHead = curHead->next;
+    }
+
+    return !(cur == NULL);
+}
+
+template<typename Type>
+void LinkedList<Type>::swap(LinkedList<Type>& list1) {
+    int sizee = list1.listSize;
+    list1.listSize = listSize;
+    listSize = sizee;
+
+    Node<Type>* swapHead = head;
+    head = list1.getHead();
+    list1.head = swapHead;
+}
+
+template<typename Type>
+void LinkedList<Type>::swap(LinkedList<Type>& list1, LinkedList<Type>& list2) {
+    list1.swap(list2);
+}
+
