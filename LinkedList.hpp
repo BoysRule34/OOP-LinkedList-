@@ -34,6 +34,51 @@ public:
     void swap(LinkedList<Type>& list1);
     void swap(LinkedList<Type>& list1, LinkedList<Type>& list2);
 
+    struct Iterator {
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Type;
+        using pointer = Node<Type>*;
+        using reference = Type&;
+
+        Iterator(pointer ptr) : m_ptr(ptr) {}
+
+        reference operator*() const { return m_ptr->data; } // m_ptr != NULL ? m_ptr->data : NULL (хз как это проверить)
+        pointer operator->() { return m_ptr; }
+        Iterator& operator++() { 
+            if (first) {
+                first = false;
+                helper(m_ptr->next, m_ptr->data);
+            } else {
+                helper(m_ptr->next, m_ptr->data * m_ptr->data);
+            }
+            return *this; //не работает с минусами
+               
+        }
+        Iterator operator++(int) { 
+            Iterator tmp = *this; ++(*this); return tmp; 
+        }
+        
+        friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
+        friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
+
+    private:
+        pointer m_ptr;
+        bool first = true;
+
+        void helper (pointer p, int i) {
+            if (p != NULL && i != p->data) {
+                helper(p->next, i * p->data);
+            } else {
+                m_ptr = p;
+            }
+        }
+    };
+
+    Iterator begin() { return Iterator(head); }
+    Iterator end() { return NULL; }
+
+
 private:
     Node<Type>* head;
     int listSize;
