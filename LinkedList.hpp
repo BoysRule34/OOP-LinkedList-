@@ -85,6 +85,10 @@ public:
     Iterator begin() { return Iterator(head); }
     Iterator end() { return NULL; }
 
+    Iterator createIterator() {
+        return begin();
+    }
+
 
 private:
     Node<Type>* head;
