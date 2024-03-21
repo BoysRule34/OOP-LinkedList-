@@ -43,16 +43,16 @@ public:
 
         Iterator(pointer ptr) : m_ptr(ptr) {}
 
-        reference operator*() const { return m_ptr->data; } // m_ptr != NULL ? m_ptr->data : NULL (хз как это проверить)
+        reference operator*() const { return m_ptr->data; } // m_ptr != nullptr ? m_ptr->data : NULL (хз как это сделать)
         pointer operator->() { return m_ptr; }
         Iterator& operator++() { 
             if (first) {
                 first = false;
                 helper(m_ptr->next, m_ptr->data);
             } else {
-                helper(m_ptr->next, m_ptr->data * m_ptr->data);
+                helper(m_ptr->next, m_ptr->data * m_ptr->data * inc(m_ptr->data));
             }
-            return *this; //не работает с минусами
+            return *this; 
                
         }
         Iterator operator++(int) { 
@@ -72,6 +72,13 @@ public:
             } else {
                 m_ptr = p;
             }
+        }
+
+        short inc(value_type p) {
+            if (std::is_same_v<decltype(p), int>)
+                return p < 0 ? -1 : 1;
+            else
+                return 1;
         }
     };
 

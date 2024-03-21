@@ -56,6 +56,11 @@ int main() {
     listforiterator.insertNode(4);
     listforiterator.insertNode(2);
     listforiterator.insertNode(32);
+    listforiterator.insertNode(-1);
+    listforiterator.insertNode(-1024);
+    listforiterator.insertNode(1);
+    listforiterator.insertNode(-1024 * 1024);
+
 
     LinkedList<int>::Iterator iterator{ listforiterator.getHead() };
 
@@ -77,6 +82,13 @@ int main() {
     iterator++;
     cout << *iterator << endl;
 
+    cout << "iterator++: ";
+    iterator++;
+    cout << *iterator << endl;
+
+    cout << "iterator++: ";
+    iterator++;
+    cout << *iterator << endl;
     cout << "cheak iterator " << endl;
 
     return 0;
